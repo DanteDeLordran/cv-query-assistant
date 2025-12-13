@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import torch
 import typer
 
 import parser
@@ -15,9 +16,19 @@ def parse(path: Path):
 
 @app.command()
 def list():
-    print("Listing...")
+    print("Listing loaded CVs...")
+
+    base_dir = Path("./data")
+    files = [file for file in base_dir.iterdir() if file.suffix == ".md"]
+
+    if not files:
+        print("No CVs at the moment")
+
+    for file in files:
+        print(f"- {file.name}")
 
 
 @app.command()
 def init():
-    print("Initializing...")
+    print("CV Query Assistant - Chatbot System")
+    print(f"CUDA available: {torch.cuda.is_available()}")
