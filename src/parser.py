@@ -3,7 +3,7 @@ from pathlib import Path
 from markitdown import MarkItDown
 
 
-def parse_to_md(path: Path, output: str | Path = "./data"):
+def parse_to_md(path: Path, output: Path = "./data") -> None:
     md = MarkItDown()
 
     file = md.convert(path)
