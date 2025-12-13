@@ -11,3 +11,7 @@ CV analyzer, summarizer and question assisstant for HR personal
 5. Load LLMs
 6. Format retrieved content
 7. Initialize chat
+
+## How does RAG works?
+
+a
