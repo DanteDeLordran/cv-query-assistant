@@ -3,8 +3,9 @@ from pathlib import Path
 
 import torch
 import typer
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_huggingface import HuggingFacePipeline
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 
 import parser
 import vectorizer
@@ -70,3 +71,47 @@ def init():
     llm = HuggingFacePipeline(pipeline=pipe)
 
     print("LLM loaded")
+
+    template = """
+Analyze every detail of this CV:
+{cv}
+Give a summary of the candidate
+Give the top 5 better questions that you can ask to the candidate in order to know if the candidate is optimal
+
+Also answer any questions I give to you related to the candidate CV in order to know him/her better
+
+Don't answer any non-related question
+"""
+
+    prompt = ChatPromptTemplate.from_template(template)
+
+    chain = prompt | llm
+
+    print("Chat started!")
+    print("Type 'q' to quit")
+
+    while True:
+        question = input("Type your question: ").strip()
+
+        if question.lower() == "q":
+            break
+
+        if not question or len(question) < 2:
+            print("Please enter a valid question")
+            continue
+
+        print("Searching in CV")
+
+        retrieved_docs = retriever.invoke(question)
+
+        if not retrieved_docs:
+            print("No relevant information found")
+            continue
+
+        print("Retrieved sections")
+
+        full_input = template.format(content=retrieved_docs, question=question)
+
+        input_tokens = tokenizer.encode(full_input)
+
+        print("Generating answer")
