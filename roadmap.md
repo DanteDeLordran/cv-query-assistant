@@ -2,8 +2,8 @@
 
 ## 1.0.0
 
-- [ ] Accept md
-- [ ] Accept txt
-- [ ] Accept pdf
-- [ ] Store CV's
-- [ ] CLI command for listing currently stored CVs to choose which one load (or new one)
+- [x] Accept md
+- [x] Accept txt
+- [x] Accept pdf
+- [x] Store CV's
+- [x] CLI command for listing currently stored CVs to choose which one load (or new one)

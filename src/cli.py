@@ -5,7 +5,7 @@ import torch
 import typer
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_huggingface import HuggingFacePipeline
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
 import parser
 import vectorizer
@@ -64,7 +64,7 @@ def list():
 @app.command()
 def init(
     cv: Path = typer.Option(None, help="CV file path (skip prompt)"),
-    model: str = typer.Option("google/flan-t5-large", help="LLM model"),
+    model: str = typer.Option("Qwen/Qwen2.5-1.5B-Instruct", help="LLM model"),
     device: str = typer.Option("auto", help="Device: auto, cuda, cpu"),
 ):
     """
@@ -117,15 +117,15 @@ def init(
     try:
         tokenizer = AutoTokenizer.from_pretrained(model)
 
-        model_obj = AutoModelForSeq2SeqLM.from_pretrained(
+        model_obj = AutoModelForCausalLM.from_pretrained(
             model,
-            torch_dtype=torch.float16 if device == "cuda" else torch.float32,
+            dtype=torch.float16 if device == "cuda" else torch.float32,
             device_map="auto" if device == "cuda" else None,
             low_cpu_mem_usage=True,
         )
 
         pipe = pipeline(
-            "text2text-generation",
+            "text-generation",
             model=model_obj,
             tokenizer=tokenizer,
             max_new_tokens=256,
@@ -133,6 +133,7 @@ def init(
             do_sample=True,
             device=0 if device == "cuda" else -1,
             truncation=True,
+            return_full_text=False,
         )
 
         llm = HuggingFacePipeline(pipeline=pipe)
