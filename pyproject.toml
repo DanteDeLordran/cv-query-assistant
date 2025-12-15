@@ -9,8 +9,10 @@ dependencies = [
     "langchain-chroma>=1.1.0",
     "langchain-huggingface>=1.1.0",
     "langchain-text-splitters>=1.0.0",
-    "markitdown[pdf,pptx,txt]>=0.1.4",
+    "markitdown[pdf,pptx]>=0.1.4",
     "pymupdf4llm>=0.2.7",
+    "sentence-transformers>=5.2.0",
     "torch>=2.9.1",
+    "transformers>=4.57.3",
     "typer>=0.20.0",
 ]
